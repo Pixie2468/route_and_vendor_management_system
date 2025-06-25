@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Route {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  vendors     Vendor[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Vendor {
+  id          String   @id @default(cuid())
+  name        String
+  route       Route    @relation(fields: [routeId], references: [id])
+  routeId     String
+  contact     String?
+  address     String?
+  bills       Bill[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Item {
+  id            String      @id @default(cuid())
+  nameEn        String
+  nameGu        String
+  rate          Float
+  hasGst        Boolean
+  gstPercentage Float?
+  billItems     BillItem[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Bill {
+  id          String     @id @default(cuid())
+  vendor      Vendor     @relation(fields: [vendorId], references: [id])
+  vendorId    String
+  date        DateTime
+  items       BillItem[]
+  total       Float
+  gstTotal    Float
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model BillItem {
+  id        String @id @default(cuid())
+  bill      Bill   @relation(fields: [billId], references: [id])
+  billId    String
+  item      Item   @relation(fields: [itemId], references: [id])
+  itemId    String
+  quantity  Float
+  rate      Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
