@@ -2,9 +2,11 @@
   "name": "backend",
   "private": true,
   "version": "0.0.0",
+  "build": "tsc -p server/tsconfig.json",
   "scripts": {
     "dev": "tsx watch server/index.ts",
     "build": "tsc -p server/tsconfig.json",
+    "start": "node server/dist/index.js",
     "lint": "tsc -p server/tsconfig.json --noEmit --pretty false"
   },
   "dependencies": {
